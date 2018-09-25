@@ -2,7 +2,7 @@ package package1;
 
 
 
-interface Greeting {
+public interface Greeting {
 	public Date getBirthday();
 
 }

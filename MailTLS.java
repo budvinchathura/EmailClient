@@ -10,7 +10,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-class MailTLS {
+public class MailTLS {
 	
 	public static void sendMail(Email email) {
 		final String username = "nimalpereracs@gmail.com";
@@ -33,11 +33,10 @@ class MailTLS {
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress("nimalpereracs@gmail.com"));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email.getRecipientAddress()));
-			message.setSubject("Subject");
+			message.setSubject(email.getSubject());
 			message.setText(email.getContent());
 
 			Transport.send(message);
-
 			System.out.println("Done");
 
 		} catch (MessagingException e) {

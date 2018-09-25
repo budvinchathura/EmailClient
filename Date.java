@@ -2,7 +2,7 @@ package package1;
 
 import java.util.Calendar;
 
-class Date {
+public class Date {
 	String year,month,day;
 	public Date(String year, String month,String day) {
 		this.year=year;

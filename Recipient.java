@@ -1,6 +1,6 @@
 package package1;
 
-abstract class Recipient {
+public abstract class Recipient {
 	private String name, email;
 
 	public Recipient(String name, String email) {

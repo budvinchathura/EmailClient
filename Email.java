@@ -2,11 +2,12 @@ package package1;
 
 import java.io.Serializable;
 
-class Email implements Serializable{
+public class Email implements Serializable{
 	private String recipientAddress;
 	private String content;
+	private String subject;
 	private Date sentDate;
-	public Email(String recipientAddress,String content) {
+	public Email(String recipientAddress,String subject,String content) {
 		this.recipientAddress=recipientAddress;
 		this.content=content;
 		this.sentDate=new Date();
@@ -24,5 +25,9 @@ class Email implements Serializable{
 
 	public Date getSentDate() {
 		return this.sentDate;
+	}
+	
+	public String getSubject() {
+		return this.subject;
 	}
 }

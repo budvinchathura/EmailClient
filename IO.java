@@ -2,7 +2,6 @@ package package1;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -12,9 +11,9 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-import emailclient.Sample;
 
-class IO {
+
+public class IO {
 
 	public static void saveToFile(String recipientDetails) {
 
@@ -81,18 +80,18 @@ class IO {
 			objectinputStream = new ObjectInputStream(inputStream);
 
 			loadedObjects = (ArrayList<Object>) objectinputStream.readObject();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			loadedObjects = new ArrayList<Object>();
-		} finally {
 			if (inputStream != null) {
 				inputStream.close();
 			}
 			if (objectinputStream != null) {
 				objectinputStream.close();
 			}
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			loadedObjects = new ArrayList<Object>();
+		} finally {
 
 		}
 
@@ -108,17 +107,17 @@ class IO {
 			outputStream = new FileOutputStream("objects.ser");
 			objectoutputStream = new ObjectOutputStream(outputStream);
 			objectoutputStream.writeObject(emailList);
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		} finally {
 			if (outputStream != null) {
 				outputStream.close();
 			}
 			if (objectoutputStream != null) {
 				objectoutputStream.close();
 			}
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+		} finally {
 
 		}
 

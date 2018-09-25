@@ -2,7 +2,7 @@ package package1;
 
 
 
-class PersonalRecipient extends Recipient implements Greeting {
+public class PersonalRecipient extends Recipient implements Greeting {
 	private String nickname;
 	Date birthday = new Date();
 

@@ -7,7 +7,7 @@ public class OfficialRecipient extends Recipient {
 		super(name, email);
 		this.designation = designation;
 	}
-	
+
 	public String getDesignation() {
 		return this.designation;
 	}

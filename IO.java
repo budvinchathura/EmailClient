@@ -11,8 +11,6 @@ import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
-
-
 public class IO {
 
 	public static void saveToFile(String recipientDetails) {
@@ -34,43 +32,47 @@ public class IO {
 		}
 	}
 
-	public static void saveRecipient(PersonalRecipient personalRecipient) {
-		String name, nickname, email, birthday;
-		name = personalRecipient.getName();
-		nickname = personalRecipient.getNickname();
-		email = personalRecipient.getEmail();
-		birthday = personalRecipient.getBirthday().getYear() + "/" + personalRecipient.getBirthday().getMonth() + "/"
-				+ personalRecipient.getBirthday().getDay();
+	public static void saveRecipient(Recipient recipient) {
+		String recipientDetails = "";
+		if (recipient instanceof PersonalRecipient) {
+			PersonalRecipient personalRecipient = (PersonalRecipient) recipient;
+			String name, nickname, email, birthday;
+			name = personalRecipient.getName();
+			nickname = personalRecipient.getNickname();
+			email = personalRecipient.getEmail();
+			birthday = personalRecipient.getBirthday().getYear() + "/" + personalRecipient.getBirthday().getMonth()
+					+ "/" + personalRecipient.getBirthday().getDay();
 
-		String recipientDetails = "Personal: " + name + "," + nickname + "," + email + "," + birthday;
-		saveToFile(recipientDetails);
-	}
+			recipientDetails = "Personal: " + name + "," + nickname + "," + email + "," + birthday;
 
-	public static void saveRecipient(OfficialRecipient officialRecipient) {
-		String name, email, designation;
-		name = officialRecipient.getName();
-		email = officialRecipient.getEmail();
-		designation = officialRecipient.getDesignation();
+		} else if (recipient instanceof OfficialRecipientFriend) {
+			OfficialRecipientFriend officialRecipientFriend = (OfficialRecipientFriend) recipient;
+			String name, email, designation, birthday;
+			name = officialRecipientFriend.getName();
+			email = officialRecipientFriend.getEmail();
+			designation = officialRecipientFriend.getDesignation();
+			birthday = officialRecipientFriend.getBirthday().getYear() + "/"
+					+ officialRecipientFriend.getBirthday().getMonth() + "/"
+					+ officialRecipientFriend.getBirthday().getDay();
 
-		String recipientDetails = "Official: " + name + "," + email + "," + designation;
-		saveToFile(recipientDetails);
-	}
+			recipientDetails = "Office_friend: " + name + "," + email + "," + designation + "," + birthday;
 
-	public static void saveRecipient(OfficialRecipientFriend officialRecipientFriend) {
-		String name, email, designation, birthday;
-		name = officialRecipientFriend.getName();
-		email = officialRecipientFriend.getEmail();
-		designation = officialRecipientFriend.getDesignation();
-		birthday = officialRecipientFriend.getBirthday().getYear() + "/"
-				+ officialRecipientFriend.getBirthday().getMonth() + "/"
-				+ officialRecipientFriend.getBirthday().getDay();
+		} else if (recipient instanceof OfficialRecipient) {
+			OfficialRecipient officialRecipient = (OfficialRecipient) recipient;
+			String name, email, designation;
+			name = officialRecipient.getName();
+			email = officialRecipient.getEmail();
+			designation = officialRecipient.getDesignation();
 
-		String recipientDetails = "Office_friend: " + name + "," + email + "," + designation + "," + birthday;
+			recipientDetails = "Official: " + name + "," + email + "," + designation;
+
+		}
+
 		saveToFile(recipientDetails);
 	}
 
 	public static ArrayList<Email> loadEmails() {
-		ArrayList<Object> loadedObjects = new ArrayList<Object>();
+		ArrayList<Object> loadedObjects = null;
 
 		FileInputStream inputStream = null;
 
@@ -88,23 +90,25 @@ public class IO {
 			}
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			// e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			loadedObjects = new ArrayList<Object>();
 		} finally {
 
 		}
+		if (loadedObjects == null) {
+			return new ArrayList<Email>();
+		}
 
 		return (ArrayList<Email>) (ArrayList<?>) loadedObjects;
 	}
 
-	public static void saveEmail(Email email, ArrayList<Email> emailList) {
-		emailList.add(email);
+	public static void saveEmails(ArrayList<Email> emailList) {
 
 		FileOutputStream outputStream = null;
 		ObjectOutputStream objectoutputStream = null;
 		try {
-			outputStream = new FileOutputStream("objects.ser");
+			outputStream = new FileOutputStream("objects.txt");
 			objectoutputStream = new ObjectOutputStream(outputStream);
 			objectoutputStream.writeObject(emailList);
 			if (outputStream != null) {
@@ -126,6 +130,7 @@ public class IO {
 	public static ArrayList<Recipient> loadRecipients() {
 		ArrayList<Recipient> recipients = new ArrayList<Recipient>();
 		ArrayList<String> recipientDetails = readFromFile();
+
 		if (recipientDetails.isEmpty()) {
 			return recipients;
 		} else {
@@ -144,7 +149,7 @@ public class IO {
 
 		}
 
-		return null;
+		return recipients;
 
 	}
 
@@ -152,21 +157,21 @@ public class IO {
 		String[] detailParts2;
 		String[] birthdayParts;
 		Date birthday;
-		switch (detailParts[0]) {
-		case "Official": {
-			detailParts2 = detailParts[0].trim().split(",");
+		switch (detailParts[0].trim().toLowerCase()) {
+		case "official": {
+			detailParts2 = detailParts[1].trim().split(",");
 			return new OfficialRecipient(detailParts2[0], detailParts2[1], detailParts2[2]);
 		}
 
-		case "Office_friend": {
-			detailParts2 = detailParts[0].trim().split(",");
+		case "office_friend": {
+			detailParts2 = detailParts[1].trim().split(",");
 			birthdayParts = detailParts2[3].split("/");
 			birthday = new Date(birthdayParts[0], birthdayParts[1], birthdayParts[2]);
 			return new OfficialRecipientFriend(detailParts2[0], detailParts2[1], detailParts2[2], birthday);
 		}
 
-		case "Personal": {
-			detailParts2 = detailParts[0].trim().split(",");
+		case "personal": {
+			detailParts2 = detailParts[1].trim().split(",");
 			birthdayParts = detailParts2[3].split("/");
 			birthday = new Date(birthdayParts[0], birthdayParts[1], birthdayParts[2]);
 			return new PersonalRecipient(detailParts2[0], detailParts2[1], detailParts2[2], birthday);

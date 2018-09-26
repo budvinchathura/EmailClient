@@ -11,7 +11,7 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 public class MailTLS {
-	
+
 	public static void sendMail(Email email) {
 		final String username = "nimalpereracs@gmail.com";
 		final String password = "cse@1234";
@@ -42,7 +42,7 @@ public class MailTLS {
 		} catch (MessagingException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 	}
 
 }

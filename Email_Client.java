@@ -1,7 +1,17 @@
-//170153K
-
+/*index_no: 170153K
+ * 
+ * creates clientList.txt for saving recipient data
+ * creates objects.txt for serializing all mails
+ * 
+ * package name removed
+ * must be entered to run the program
+ */
 package mail_client_package1;
 
+/*
+ * imports
+ * javax should be present in referenced external libraries
+ */
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,9 +35,12 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+/*
+ * main class containing main method
+ */
 public class Email_Client {
 	public static void main(String[] args) {
-		EmailClient emailClient = new EmailClient();
+		EmailClient emailClient = new EmailClient(); // instance of a new email client
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("\nEnter option type: \n" + "1 - Adding a new recipient\n" + "2 - Sending an email\n"
 				+ "3 - Printing out all the recipients who have birthdays\n"
@@ -44,12 +57,12 @@ public class Email_Client {
 
 			break;
 		case 2:
-			System.out.println("\nEnter the details of the email to send:");
+			System.out.println("\nEnter the details of the email to send (email,subject,content):");
 			String emailComponents = scanner.nextLine().trim();
 			emailClient.sendEmail(emailComponents);
 			break;
 		case 3:
-			System.out.println("\nEnter the date to diaplay birthdays:");
+			System.out.println("\nEnter the date to diaplay birthdays (yyyy/MM/dd):");
 			String[] dateComponents = scanner.nextLine().trim().split("/");
 			Date givenDate = new Date(dateComponents[0], dateComponents[1], dateComponents[2]);
 			emailClient.printGivenDateBirthdays(givenDate);
@@ -57,7 +70,7 @@ public class Email_Client {
 			// code to print recipients who have birthdays on the given date
 			break;
 		case 4:
-			System.out.println("\nEnter the date to display sent emails:");
+			System.out.println("\nEnter the date to display sent emails (yyyy/MM/dd):");
 			String[] dateComponents2 = scanner.nextLine().trim().split("/");
 			Date givenDate2 = new Date(dateComponents2[0], dateComponents2[1], dateComponents2[2]);
 			emailClient.printGivenDateEmails(givenDate2);
@@ -68,7 +81,7 @@ public class Email_Client {
 			break;
 		default:
 			System.out.println("Invalid input!");
-        	break;
+			break;
 
 		}
 		emailClient.sendWishes();
@@ -80,6 +93,9 @@ public class Email_Client {
 
 }
 
+/*
+ * creates a new email client
+ */
 class EmailClient {
 
 	private ArrayList<Recipient> allRecipients = new ArrayList<Recipient>();
@@ -88,12 +104,17 @@ class EmailClient {
 	private ArrayList<Email> todaySentEmails = new ArrayList<Email>();
 
 	public EmailClient() {
+		// loading all the previously sent email and saved recipients
 		this.allRecipients = IO.loadRecipients();
 		this.greetableRecipients = loadGreetableRecipients();
 		this.prevEmails = IO.loadEmails();
 
 	}
 
+	/*
+	 * iterates the all recipient list and returns the recipients who have a
+	 * birthday saved
+	 */
 	private ArrayList<Greetable> loadGreetableRecipients() {
 		ArrayList<Greetable> greetableRecipients = new ArrayList<Greetable>();
 		if (this.allRecipients.isEmpty()) {
@@ -110,6 +131,9 @@ class EmailClient {
 		}
 	}
 
+	/*
+	 * adds a user given recipient
+	 */
 	public void addRecipient(String recipientDetails) {
 		Recipient recipient = IO.createRecipient(recipientDetails.split(":"));
 		IO.saveRecipient(recipient);
@@ -120,6 +144,9 @@ class EmailClient {
 
 	}
 
+	/*
+	 * sends a user given email
+	 */
 	public void sendEmail(String emailDetails) {
 		String[] emailParts = emailDetails.trim().split(",");
 		Email sendingEmail = new Email(emailParts[0], emailParts[1], emailParts[2]);
@@ -127,9 +154,12 @@ class EmailClient {
 		MailTLS.sendMail(sendingEmail);
 		System.out.println("Your email was sent successfully");
 		this.todaySentEmails.add(sendingEmail);
-		
+
 	}
 
+	/*
+	 * prints all the recipients who have their birthday on a given date
+	 */
 	public void printGivenDateBirthdays(Date date) {
 		ArrayList<Greetable> givenDateBirthdayRecipients = new ArrayList<Greetable>();
 		givenDateBirthdayRecipients = getGivenBirthdayRecipients(this.greetableRecipients, date);
@@ -144,6 +174,9 @@ class EmailClient {
 
 	}
 
+	/*
+	 * returns all the recipients who have their birthday on a given date
+	 */
 	private ArrayList<Greetable> getGivenBirthdayRecipients(ArrayList<Greetable> allGreetableRecipients, Date date) {
 		ArrayList<Greetable> givenBirthdayRecipients = new ArrayList<Greetable>();
 		if (allGreetableRecipients.isEmpty()) {
@@ -160,6 +193,9 @@ class EmailClient {
 		return givenBirthdayRecipients;
 	}
 
+	/*
+	 * prints all the mails which were sent on a given date
+	 */
 	public void printGivenDateEmails(Date date) {
 		ArrayList<Email> givenDateEmails = getGivenDateEmails(this.prevEmails, date);
 		if (givenDateEmails.isEmpty()) {
@@ -176,6 +212,9 @@ class EmailClient {
 		}
 	}
 
+	/*
+	 * returns all mails sent on a given date
+	 */
 	private ArrayList<Email> getGivenDateEmails(ArrayList<Email> allEmails, Date date) {
 		ArrayList<Email> givenDateEmails = new ArrayList<Email>();
 		if (allEmails.isEmpty()) {
@@ -192,10 +231,16 @@ class EmailClient {
 		}
 	}
 
+	/*
+	 * prints number of recipient objects in the email client
+	 */
 	public void printNoOfRecipients() {
 		System.out.println("\nNo of recipients: " + this.allRecipients.size());
 	}
 
+	/*
+	 * sends wishes for everyone who has their birthday today
+	 */
 	public void sendWishes() {
 		System.out.println("\nChecking for today birthdays");
 		Date today = new Date();
@@ -220,6 +265,9 @@ class EmailClient {
 
 	}
 
+	/*
+	 * sends a birthday wish for a personal friend
+	 */
 	private void sendPersonalWish(PersonalRecipient person) {
 		Email wish = new Email(person.getEmail(), "Happy Birthday!",
 				"Dear " + person.getName() + ",\nHugs and love on your birthday!\nEmail User");
@@ -227,6 +275,9 @@ class EmailClient {
 		this.todaySentEmails.add(wish);
 	}
 
+	/*
+	 * sends a birthday wish for an office friend
+	 */
 	private void sendOfficialWish(OfficialRecipientFriend person) {
 		Email wish = new Email(person.getEmail(), "Happy Birthday!",
 				"Dear " + person.getName() + ",\nWish you a Happy Birthday!\nEmailUser");
@@ -234,6 +285,9 @@ class EmailClient {
 		this.todaySentEmails.add(wish);
 	}
 
+	/*
+	 * serializes all email objects
+	 */
 	public void serializeEmails() {
 		ArrayList<Email> emailsToSerialize = new ArrayList<Email>();
 		emailsToSerialize.addAll(this.prevEmails);
@@ -244,14 +298,21 @@ class EmailClient {
 
 }
 
+/*
+ * class for all file handling IO operations
+ */
 class IO {
 
+	/*
+	 * saves a recipient detail string to the text file
+	 */
 	public static void saveToFile(String recipientDetails) {
 
 		PrintWriter outputStream = null;
 		try {
 
-			outputStream = new PrintWriter(new FileWriter("clientList.txt", true));
+			outputStream = new PrintWriter(new FileWriter("clientList.txt", true)); // client detail file name in this
+																					// line
 
 			outputStream.println(recipientDetails);
 		} catch (IOException e) {
@@ -265,6 +326,12 @@ class IO {
 		}
 	}
 
+	/*
+	 * generates relevant string to be saved for a recipient Official:
+	 * nimal,nimal@gmail.com,ceo Office_friend:
+	 * kamal,kamal@gmail.com,clerk,2000/12/12 Personal:
+	 * sunil,<nick-name>,sunil@gmail.com,2000/10/10
+	 */
 	public static void saveRecipient(Recipient recipient) {
 		String recipientDetails = "";
 		if (recipient instanceof PersonalRecipient) {
@@ -304,6 +371,10 @@ class IO {
 		saveToFile(recipientDetails);
 	}
 
+	/*
+	 * deserializes all email objects in the saved text file if file is not found
+	 * returns empty ArrayList of mails
+	 */
 	public static ArrayList<Email> loadEmails() {
 		ArrayList<Object> loadedObjects = null;
 
@@ -311,7 +382,7 @@ class IO {
 
 		ObjectInputStream objectinputStream = null;
 		try {
-			inputStream = new FileInputStream("objects.txt");
+			inputStream = new FileInputStream("objects.txt"); // object file name in this line
 			objectinputStream = new ObjectInputStream(inputStream);
 
 			loadedObjects = (ArrayList<Object>) objectinputStream.readObject();
@@ -323,7 +394,7 @@ class IO {
 			}
 
 		} catch (IOException e) {
-			System.out.println("Could not load previous Emails!");
+			System.out.println("Could not load previous Emails!"); // if the file is not available
 			// e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			loadedObjects = new ArrayList<Object>();
@@ -337,6 +408,9 @@ class IO {
 		return (ArrayList<Email>) (ArrayList<?>) loadedObjects;
 	}
 
+	/*
+	 * serializes mails in the file
+	 */
 	public static void saveEmails(ArrayList<Email> emailList) {
 
 		FileOutputStream outputStream = null;
@@ -361,6 +435,10 @@ class IO {
 
 	}
 
+	/*
+	 * reads and returns all the recipient objects given the string lines from the
+	 * file
+	 */
 	public static ArrayList<Recipient> loadRecipients() {
 		ArrayList<Recipient> recipients = new ArrayList<Recipient>();
 		ArrayList<String> recipientDetails = readFromFile();
@@ -374,7 +452,7 @@ class IO {
 			Recipient recipient;
 			for (int i = 0; i < recipientDetails.size(); i++) {
 				detailParts = recipientDetails.get(i).split(":");
-				recipient = createRecipient(detailParts);
+				recipient = createRecipient(detailParts); // creating recipient according to the type
 				if (recipient != null) {
 					recipients.add(recipient);
 				} else {
@@ -388,6 +466,9 @@ class IO {
 
 	}
 
+	/*
+	 * returns relevant recipient object created from string list
+	 */
 	public static Recipient createRecipient(String[] detailParts) {
 		String[] detailParts2;
 		String[] birthdayParts;
@@ -418,6 +499,9 @@ class IO {
 
 	}
 
+	/*
+	 * reads all the recipient details from the file and returns the lines
+	 */
 	public static ArrayList<String> readFromFile() {
 		ArrayList<String> recipientDetails = new ArrayList<String>();
 		FileReader fileIn = null;
@@ -445,9 +529,17 @@ class IO {
 
 }
 
+/*
+ * class for sending mail using TLS method correct username and password for a
+ * gmail account should be entered
+ */
 class MailTLS {
 
+	/*
+	 * takes param as an email object and sends via TLS method
+	 */
 	public static void sendMail(Email email) {
+		// senders's username and password here
 		final String username = "mytestingemailcs@gmail.com";
 		final String password = "testing*97";
 
@@ -474,13 +566,16 @@ class MailTLS {
 			Transport.send(message);
 
 		} catch (MessagingException e) {
-			//throw new RuntimeException(e);
+			// throw new RuntimeException(e);
 		}
 
 	}
 
 }
 
+/*
+ * creates an abstract general recipient
+ */
 abstract class Recipient {
 	private String name, email;
 
@@ -499,6 +594,9 @@ abstract class Recipient {
 	}
 }
 
+/*
+ * creates a personal recipient
+ */
 class PersonalRecipient extends Recipient implements Greetable {
 	private String nickname;
 	Date birthday = new Date();
@@ -520,6 +618,9 @@ class PersonalRecipient extends Recipient implements Greetable {
 
 }
 
+/*
+ * creates an official recipient
+ */
 class OfficialRecipient extends Recipient {
 	private String designation;
 
@@ -534,6 +635,9 @@ class OfficialRecipient extends Recipient {
 
 }
 
+/*
+ * creates an official recipient friend
+ */
 class OfficialRecipientFriend extends OfficialRecipient implements Greetable {
 	private Date birthday = new Date();
 
@@ -549,6 +653,10 @@ class OfficialRecipientFriend extends OfficialRecipient implements Greetable {
 
 }
 
+/*
+ * interface for all recipients who have their birthday listed in the client
+ * details
+ */
 interface Greetable {
 	public Date getBirthday();
 
@@ -556,6 +664,9 @@ interface Greetable {
 
 }
 
+/*
+ * creates an email
+ */
 class Email implements Serializable {
 	private String recipientAddress;
 	private String content;
@@ -587,9 +698,15 @@ class Email implements Serializable {
 	}
 }
 
+/*
+ * creates a date
+ */
 class Date implements Serializable {
 	String year, month, day;
 
+	/*
+	 * creates a given date
+	 */
 	public Date(String year, String month, String day) {
 		this.year = year;
 		this.month = month;
@@ -597,6 +714,9 @@ class Date implements Serializable {
 
 	}
 
+	/*
+	 * creates today's date
+	 */
 	public Date() {
 		Calendar calendar = Calendar.getInstance();
 		this.year = String.valueOf(calendar.get(Calendar.YEAR));

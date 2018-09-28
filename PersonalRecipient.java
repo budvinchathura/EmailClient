@@ -1,6 +1,6 @@
 package package1;
 
-public class PersonalRecipient extends Recipient implements Greeting {
+public class PersonalRecipient extends Recipient implements Greetable {
 	private String nickname;
 	Date birthday = new Date();
 

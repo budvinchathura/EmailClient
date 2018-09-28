@@ -22,8 +22,8 @@ public class IO {
 
 			outputStream.println(recipientDetails);
 		} catch (IOException e) {
-
-			e.printStackTrace();
+			System.out.println("Could not write Recipient Details to text file!");
+			//e.printStackTrace();
 		} finally {
 
 			if (outputStream != null) {
@@ -90,6 +90,7 @@ public class IO {
 			}
 
 		} catch (IOException e) {
+			System.out.println("Could not load previous Emails!");
 			// e.printStackTrace();
 		} catch (ClassNotFoundException e) {
 			loadedObjects = new ArrayList<Object>();
@@ -99,7 +100,7 @@ public class IO {
 		if (loadedObjects == null) {
 			return new ArrayList<Email>();
 		}
-
+		System.out.println("Previous sent emails loaded");
 		return (ArrayList<Email>) (ArrayList<?>) loadedObjects;
 	}
 
@@ -119,8 +120,8 @@ public class IO {
 			}
 
 		} catch (IOException e) {
-
-			e.printStackTrace();
+			System.out.println("Could not save Emails!");
+			//e.printStackTrace();
 		} finally {
 
 		}
@@ -135,6 +136,7 @@ public class IO {
 			return recipients;
 		} else {
 
+			System.out.println("Recipient details loaded");
 			String[] detailParts;
 			Recipient recipient;
 			for (int i = 0; i < recipientDetails.size(); i++) {
@@ -199,7 +201,7 @@ public class IO {
 			fileIn.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Could not load Recipient Details");
 		} finally {
 
 		}

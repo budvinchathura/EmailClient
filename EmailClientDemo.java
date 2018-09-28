@@ -7,10 +7,10 @@ public class EmailClientDemo {
 	public static void main(String[] args) {
 		EmailClient emailClient = new EmailClient();
 		Scanner scanner = new Scanner(System.in);
-		System.out.println("Enter option type: \n" + "1 - Adding a new recipient\n" + "2 - Sending an email\n"
+		System.out.println("\nEnter option type: \n" + "1 - Adding a new recipient\n" + "2 - Sending an email\n"
 				+ "3 - Printing out all the recipients who have birthdays\n"
 				+ "4 - Printing out details of all the emails sent\n"
-				+ "5 - Printing out the number of recipient objects in the application");
+				+ "5 - Printing out the number of recipient objects in the application\n");
 
 		int option = Integer.parseInt(scanner.nextLine().trim());
 		switch (option) {
@@ -50,6 +50,7 @@ public class EmailClientDemo {
 		// emailClient.sendWishes();
 		emailClient.serializeEmails();
 		scanner.close();
+		System.out.println("Closing email client...");
 
 	}
 

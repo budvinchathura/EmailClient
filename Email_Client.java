@@ -45,9 +45,8 @@ public class Email_Client {
 			break;
 		case 2:
 			System.out.println("\nEnter the details of the email to send:");
-			String[] emailComponents = scanner.nextLine().trim().split(",");
-			Email email = new Email(emailComponents[0], emailComponents[1], emailComponents[2]);
-			MailTLS.sendMail(email);
+			String emailComponents = scanner.nextLine().trim();
+			emailClient.sendEmail(emailComponents);
 			break;
 		case 3:
 			System.out.println("\nEnter the date to diaplay birthdays:");
@@ -67,9 +66,12 @@ public class Email_Client {
 		case 5:
 			emailClient.printNoOfRecipients();
 			break;
+		default:
+			System.out.println("Invalid input!");
+        	break;
 
 		}
-		// emailClient.sendWishes();
+		emailClient.sendWishes();
 		emailClient.serializeEmails();
 		scanner.close();
 		System.out.println("Closing email client...");
@@ -120,9 +122,12 @@ class EmailClient {
 
 	public void sendEmail(String emailDetails) {
 		String[] emailParts = emailDetails.trim().split(",");
-		Email sendingEmail = new Email(emailParts[0], emailParts[0], emailParts[0]);
+		Email sendingEmail = new Email(emailParts[0], emailParts[1], emailParts[2]);
+		System.out.println("\nSending your email...");
 		MailTLS.sendMail(sendingEmail);
+		System.out.println("Your email was sent successfully");
 		this.todaySentEmails.add(sendingEmail);
+		
 	}
 
 	public void printGivenDateBirthdays(Date date) {
@@ -192,13 +197,13 @@ class EmailClient {
 	}
 
 	public void sendWishes() {
+		System.out.println("\nChecking for today birthdays");
 		Date today = new Date();
-		System.out.println(today.getDay() + today.getMonth() + today.getYear());
 		ArrayList<Greetable> todayBirthdayRecipients;
 		todayBirthdayRecipients = getGivenBirthdayRecipients(this.greetableRecipients, today);
 
 		if (todayBirthdayRecipients.isEmpty()) {
-			System.out.println("No wishes sent today!");
+			System.out.println("No birthdays today, No wishes sent today!");
 			return;
 		} else {
 			for (int i = 0; i < todayBirthdayRecipients.size(); i++) {
@@ -443,8 +448,8 @@ class IO {
 class MailTLS {
 
 	public static void sendMail(Email email) {
-		final String username = "nimalpereracs@gmail.com";
-		final String password = "cse@1234";
+		final String username = "mytestingemailcs@gmail.com";
+		final String password = "testing*97";
 
 		Properties props = new Properties();
 		props.put("mail.smtp.auth", "true");
@@ -461,7 +466,7 @@ class MailTLS {
 		try {
 
 			Message message = new MimeMessage(session);
-			message.setFrom(new InternetAddress("nimalpereracs@gmail.com"));
+			message.setFrom(new InternetAddress("mytestingemailcs@gmail.com"));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email.getRecipientAddress()));
 			message.setSubject(email.getSubject());
 			message.setText(email.getContent());
@@ -469,7 +474,7 @@ class MailTLS {
 			Transport.send(message);
 
 		} catch (MessagingException e) {
-			throw new RuntimeException(e);
+			//throw new RuntimeException(e);
 		}
 
 	}
